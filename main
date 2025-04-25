@@ -52,3 +52,16 @@ CREATE TABLE venda (
     FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
 	FOREIGN KEY (id_pagamento) REFERENCES pagamento(id_pagamento)
 );
+
+CREATE TABLE produto (
+	id_protudo INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    quantidade INT NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
+	id_categoria INT NOT NULL,
+	id_venda INT NOT NULL,
+	id_funcionario INT NOT NULL,
+    FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria),
+    FOREIGN KEY (id_venda) REFERENCES venda(id_venda),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionario(id_funcionario)
+);  
