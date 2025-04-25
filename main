@@ -1,3 +1,20 @@
+SHOW DATABASES;
+
+CREATE DATABASE baratao_do_bairro;
+
+USE baratao_do_bairro;
+
+
+CREATE TABLE cliente (
+	id_cliente INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    telefone CHAR(14) NOT NULL ,
+	email VARCHAR(100)  NOT NULL,
+	endereco VARCHAR(100)  NOT NULL,
+    cpf CHAR(14) NOT NULL UNIQUE KEY,
+    sts ENUM('A','I') NOT NULL,
+);
+
 CREATE TABLE pedido (
     id_pedido INT PRIMARY KEY AUTO_INCREMENT,
 	dt_pedido DATE NOT NULL,
@@ -8,3 +25,9 @@ CREATE TABLE pedido (
 	FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
 	FOREIGN KEY (id_pagamento) REFERENCES pagamento(id_pagamento)
 );
+
+CREATE TABLE categoria (
+	id_categoria INT PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(100) NOT NULL
+);
+
