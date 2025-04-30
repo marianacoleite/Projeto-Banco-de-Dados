@@ -4,6 +4,10 @@ CREATE DATABASE baratao_do_bairro;
 
 USE baratao_do_bairro;
 
+CREATE TABLE pagamento(
+    id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
+    forma_pagar VARCHAR(100) NOT NULL
+);
 
 CREATE TABLE cliente (
 	id_cliente INT PRIMARY KEY AUTO_INCREMENT,
@@ -13,6 +17,8 @@ CREATE TABLE cliente (
 	endereco VARCHAR(100)  NOT NULL,
     cpf CHAR(14) NOT NULL UNIQUE KEY,
     sts ENUM('A','I') NOT NULL,
+    id_pagamento INT NOT NULL,
+    FOREIGN KEY (id_pagamento) REFERENCES pagamento(id_pagamento)
 );
 
 CREATE TABLE pedido (
@@ -54,7 +60,7 @@ CREATE TABLE venda (
 );
 
 CREATE TABLE produto (
-	id_protudo INT PRIMARY KEY AUTO_INCREMENT,
+	id_produto INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     quantidade INT NOT NULL,
     preco DECIMAL(10,2) NOT NULL,
@@ -65,3 +71,12 @@ CREATE TABLE produto (
     FOREIGN KEY (id_venda) REFERENCES venda(id_venda),
     FOREIGN KEY (id_funcionario) REFERENCES funcionario(id_funcionario)
 );  
+
+CREATE TABLE produto_fornecedor(
+    id_produto INT NOT NULL,
+    id_categoria INT NOT NULL,
+    id_fornecedor INT NOT NULL,
+    FOREIGN KEY (id_produto) REFERENCES produto(id_produto)
+    FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+    FOREIGN KEY (id_fornecedor) REFERENCES fornecedor(id_fornecedor)
+);
