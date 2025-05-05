@@ -96,6 +96,14 @@ CREATE TABLE produto_fornecedor(
     FOREIGN KEY (id_fornecedor) REFERENCES fornecedor(id_fornecedor)
 );
 
+-- INSERTS DO CODIGO 
+-- Pagamento
+INSERT INTO pagamento (forma_pagar) 
+VALUES  ('Dinheiro'),
+		('Pix'),
+		('Cartão de Crédito'),
+		('Cartão de Débito');
+
 
 INSERT INTO categoria (nome) 
 VALUES  ('Alimentos'),
@@ -104,10 +112,18 @@ VALUES  ('Alimentos'),
 		('Higiene'),
 		('Eletrônicos');
 
+
+
 -- Funcionario
 INSERT INTO funcionario (nome, telefone, email, endereco, cpf) 
 VALUES
-('Gustavo Rocha', '(75)96789-0123', 'gustavo7x@gmail.com', 'Rua Salvador, 333', '915.720.384-17'),
+		('Rafael Andrade', '(75)91234-5678', 'rafael.d.98@gmail.com', 'Av. Paulista, 1000', '381.452.967-25'),
+		('Bianca Torres', '(75)99876-5432', 'bianca.torres43@gmail.com', 'Rua do Carmo, 250', '147.903.285-66'),
+		('Thiago Mendes', '(75)92345-6789', 'thiago.mendes23@gmail.com', 'Rua Java, 45', '596.281.470-09'),
+		('Larissa Gomes', '(75)93456-7890', 'larissa.gomes87@gmail.com', 'Av. das Artes, 789', '860.134.902-33'),
+		('Fernando Lima', '(75)94567-8901', 'fernando.lima97@gmail.com', 'Rua da Ajuda, 303', '203.875.619-70'),
+		('Patrícia Souza','(75)95678-9012', 'patricia.souza7@gmail.com', 'SQN 108 Bloco B', '472.063.198-44'),
+		('Gustavo Rocha', '(75)96789-0123', 'gustavo7x@gmail.com', 'Rua Salvador, 333', '915.720.384-17'),
 		('Camila Ferreira', '(75)97890-1234', 'camila.89@gmail.com', 'Av. Recife, 404', '658.294.730-81'),
         ('Vanessa Ribeiro', '(75)98912-3456', 'vanessa.ribeiro@gmail.com', 'Rua das Laranjeiras, 505', '724.198.365-92'),
 		('Bruno Costa', '(75)99134-5678', 'bruno.costa@gmail.com', 'Av. Brasil, 789', '837.610.429-50'),
@@ -118,6 +134,17 @@ VALUES
 -- Venda
 INSERT INTO venda (id_funcionario, id_cliente, dt_venda, valor_total)
 VALUES
+		(5, 20, '2025-04-11', 295.00),
+		(2, 22, '2025-04-13', 168.90),
+		(4, 24, '2025-04-15', 420.00),
+		(8, 15, '2025-04-06', 235.90),
+		(3, 22, '2025-03-06', 205.50),
+		(2, 14, '2025-04-05', 680.00),
+		(3, 13, '2025-01-23', 395.20),
+		(7, 1, '2025-04-01', 430.00),
+		(3, 10, '2025-03-08', 199.99),
+		(1, 26, '2025-04-17', 230.00),
+
 		(6, 1, '2025-02-05', 180.00),
 		(1, 23, '2025-03-09', 580.90),
 		(7, 27, '2025-03-20', 205.00),
@@ -151,10 +178,28 @@ VALUES
 		('Detergente Neutro 500ml', 1, 2.20, 3, 3, 4),
 		('Escova para Vaso Sanitário', 1, 5.99, 3, 4, 5),
 		('Desentupidor Manual', 1, 7.90, 3, 5, 6),
+-- Higiente 
+		('Shampoo Infantil 250ml', 1, 9.50, 4, 6, 7),
+		('Condicionador 300ml', 1, 10.90, 4, 7, 8),
+		('Sabonete Neutro', 2, 1.80, 4, 8, 1),
+		('Papel Higiênico Folha Dupla c/4', 1, 7.99, 4, 9, 2),
+		('Creme Dental com Flúor 90g', 1, 3.30, 4, 10, 3),
+		('Desodorante Roll-on', 1, 6.99, 4, 11, 4),
+		('Fio Dental 25m', 1, 3.99, 4, 12, 5),
+		('Absorvente Noturno c/8', 1, 5.80, 4, 13, 6),
+		('Lenço Umedecido c/50', 1, 7.50, 4, 14, 7),
+		('Escova de Cabelo Pequena', 1, 4.90, 4, 15, 8),
+
 
 -- Fornecedor
 INSERT INTO fornecedor (nome, telefone, email, endereco, cpf) 
 VALUES
+('Super Alimentos Santos', '(11) 99123-4567', 'santos@superalimentos.com', 'Rua das Andorinhas, 1125 - São Paulo/SP', '294.781.652-48'),
+('Bebidas Real', '(11) 99234-5678', 'contato@bebidasreal.com', 'Av. das Águas, 1227 - São Paulo/SP', '809.356.419-02'),
+('Limpeza Prática', '(11) 99345-6789', 'limpezapratica@limpeza.com', 'Rua do Luar, 1329 - São Paulo/SP', '504.682.190-75'),
+('Higiene Pura', '(11) 99456-7890', 'higienepura@higienepura.com', 'Avenida Brasil, 1431 - São Paulo/SP', '148.360.829-64'),
+('Tech Eletrônicos', '(11) 99567-8901', 'atendimento@techeletronicos.com', 'Rua das Estrelas, 1533 - São Paulo/SP', '230.547.986-33'),
+
 ('Alimentos Fazenda Boa Vista', '(11) 99678-9012', 'contato@fazendaboavista.com', 'Rua dos Jatobás, 1635 - São Paulo/SP', '781.042.357-94'),
 ('Bebidas do Sertão', '(11) 99789-0123', 'vendas@bebidasdosertao.com', 'Rua da Lua, 1737 - São Paulo/SP', '615.397.804-82'),
 ('Limpeza Express', '(11) 99890-1234', 'limpezaexpress@limpeza.com', 'Avenida do Sol, 1839 - São Paulo/SP', '439.618.205-37'),
@@ -164,7 +209,23 @@ VALUES
 
 INSERT INTO produto_fornecedor (id_produto, id_categoria, id_fornecedor) 
 VALUES  
-(31, 1, 6),
+		(16, 1, 5),
+		(17, 2, 8),
+		(18, 3, 13),
+		(19, 4, 6),
+		(20, 5, 21),
+		(21, 1, 15),
+		(22, 2, 4),
+		(23, 3, 14),
+		(24, 4, 7),
+		(25, 5, 20),
+		(26, 1, 9),
+		(27, 2, 3),
+		(28, 3, 16),
+		(29, 4, 18),
+		(30, 5, 22),
+
+		(31, 1, 6),
 		(32, 2, 17),
 		(33, 3, 1),
 		(34, 4, 11),
@@ -189,6 +250,21 @@ VALUES
 -- pedido
 INSERT INTO pedido (id_cliente, id_pagamento, dt_pedido, valor_total, sts) 
 VALUES  
+	(1, 2, '2025-04-01', 58.90, 'Pago'),
+	(2, 1, '2025-04-02', 34.50, 'Pago'),
+	(3, 3, '2025-04-02', 102.75, 'Pago'),
+	(4, 4, '2025-04-03', 87.30, 'Aberto'),
+	(5, 2, '2025-04-04', 45.60, 'Pago'),
+	(6, 1, '2025-04-04', 19.90, 'Pago'),
+	(7, 4, '2025-04-05', 65.00, 'Pago'),
+	(8, 3, '2025-04-05', 42.25, 'Aberto'),
+	(9, 2, '2025-04-06', 77.40, 'Pago'),
+	(10, 1, '2025-04-06', 33.20, 'Pago'),
+	(1, 3, '2025-04-07', 59.99, 'Cancelado'),
+	(2, 4, '2025-04-07', 84.00, 'Pago'),
+	(3, 2, '2025-04-08', 71.35, 'Pago'),
+	(4, 1, '2025-04-08', 38.10, 'Aberto'),
+
     (5, 3, '2025-04-16', 33.30, 'Pago'),
 	(6, 2, '2025-04-16', 19.99, 'Pago'),
 	(7, 3, '2025-04-17', 104.50, 'Pago'),
