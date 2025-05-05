@@ -104,6 +104,18 @@ VALUES  ('Dinheiro'),
 		('Cartão de Crédito'),
 		('Cartão de Débito');
 
+INSERT INTO cliente (nome, telefone, email, endereco, cpf, sts, id_pagamento)
+ VALUES
+		('Ana Paula Silva', '(75)91234-5678', 'ana.silva@email.com', 'Rua das Flores, 123', '123.456.789-00', 'A', 1),
+		('Carlos Alberto Souza', '(75)99876-5432', 'carlos.souza@email.com', 'Av. Atlântica, 456', '234.567.890-11', 'I', 2),
+		('Mariana Lima', '(75)92345-6789', 'mariana.lima@email.com', 'Rua Minas Gerais, 789', '345.678.901-22', 'A', 1),
+		('João Pedro Oliveira', '(75)93456-7890', 'joao.oliveira@email.com', 'Rua Curitiba, 101', '456.789.012-33', 'A', 3),
+		('Fernanda Costa', '(75)94567-8901', 'fernanda.costa@email.com', 'Av. Ipiranga, 202', '567.890.123-44', 'I', 2),
+		('Lucas Mendes', '(61)95678-9012', 'lucas.mendes@email.com', 'SQN 210 Bloco D', '678.901.234-55', 'A', 4),
+		('Juliana Rocha', '(71)96789-0123', 'juliana.rocha@email.com', 'Rua Bahia, 303', '789.012.345-66', 'A', 3),
+		('Fatima Martins', '(81)97890-1234', 'fatima.martins@email.com', 'Av. Recife, 404', '890.123.456-77', 'I', 2),
+		('Tatiane Borges', '(91)98901-2345', 'tatiane.borges@email.com', 'Trav. Nazaré, 505', '901.234.567-88', 'A', 1),
+		('Eduardo Ferreira', '(85)99012-3456', 'eduardo.ferreira@email.com', 'Rua Fortaleza, 606', '012.345.678-99', 'I', 4),
 
 INSERT INTO categoria (nome) 
 VALUES  ('Alimentos'),
@@ -130,6 +142,18 @@ VALUES
 		('Juliana Martins', '(75)99245-6789', 'juliana.martins@gmail.com', 'Rua das Violetas, 234', '168.907.531-28'),
 		('Carlos Henrique', '(75)99356-7890', 'carlos.henrique@gmail.com', 'Travessa Sol Nascente, 112', '590.243.817-64');
 
+-- Venda
+INSERT INTO venda (id_funcionario, id_cliente, dt_venda, valor_total)
+VALUES  (4, 8, '2025-02-07', 723.00),
+		(4, 2, '2025-03-22', 150.00),
+		(6, 3, '2025-03-18', 275.00),
+		(2, 5, '2025-01-12', 150.50),
+		(3, 30, '2025-04-21', 410.00),
+		(5, 5, '2025-03-27', 310.40),
+		(1, 18, '2025-04-09', 155.00),
+		(3, 3, '2025-01-20', 300.00),
+		(2, 26, '2025-03-17', 460.00),
+		(6, 21, '2025-04-12', 487.60),
 
 -- Venda
 INSERT INTO venda (id_funcionario, id_cliente, dt_venda, valor_total)
@@ -167,7 +191,7 @@ VALUES
 -- ATUALIZAR DEPOIS O ID FUNCIONARIO
 INSERT INTO produto (nome, quantidade, preco, id_categoria, id_venda, id_funcionario) 
 VALUES
-- Limpeza
+-- Limpeza
 		('Sabão em Pó 800g', 1, 8.90, 3, 11, 5),
 		('Desinfetante Citrus 1L', 1, 4.20, 3, 12, 6),
 		('Água Sanitária 1L', 1, 3.50, 3, 13, 7),
@@ -190,6 +214,29 @@ VALUES
 		('Lenço Umedecido c/50', 1, 7.50, 4, 14, 7),
 		('Escova de Cabelo Pequena', 1, 4.90, 4, 15, 8),
 
+    -- Bebida
+    INSERT INTO produto (nome, quantidade, preco, id_categoria, id_venda, id_funcionario) 
+    VALUES
+		('Refrigerante Guaraná 2L', 1, 8.99, 2, 1, 3),
+		('Cerveja Skol 350ml', 2, 2.99, 2, 2, 4),
+		('Suco de Uva Integral 1L', 1, 12.50, 2, 3, 5),
+		('Água com Gás 500ml', 2, 2.20, 2, 4, 6),
+		('Iogurte Morango 170g', 2, 2.60, 2, 5, 7),
+		('Energético Monster 473ml', 1, 9.99, 2, 6, 8),
+		('Chá Gelado Pêssego 1L', 1, 4.80, 2, 7, 1),
+		('Achocolatado Pronto 200ml', 2, 2.99, 2, 8, 2),
+		('Café Gelado 270ml', 1, 5.49, 2, 9, 3),
+		('Suco Detox Verde 300ml', 1, 6.90, 2, 10, 4),
+
+-- Fornecedor
+INSERT INTO fornecedor (nome, telefone, email, endereco, cpf) 
+VALUES
+('Alimentos São João', '(11) 98123-4567', 'contato@alimentosjoao.com', 'Rua das Flores, 101 - São Paulo/SP', '397.284.150-20'),
+('Bebidas São Paulo', '(11) 98234-5678', 'vendas@bebidasaopaulo.com', 'Avenida Central, 205 - São Paulo/SP', '620.481.903-78'),
+('Limpeza e Cia', '(11) 98345-6789', 'limpezaecia@limpeza.com', 'Rua do Pinho, 307 - São Paulo/SP', '284.910.675-43'),
+('Higiene Total', '(11) 98456-7890', 'suporte@higienetotal.com', 'Rua dos Limoeiros, 411 - São Paulo/SP', '805.173.469-92'),
+('TecnoBairro Eletrônicos', '(11) 98567-8901', 'atendimento@tecnobairro.com', 'Rua do Sol, 513 - São Paulo/SP', '943.278.301-66'),
+
 
 -- Fornecedor
 INSERT INTO fornecedor (nome, telefone, email, endereco, cpf) 
@@ -206,6 +253,24 @@ VALUES
 ('Higiene Viva', '(11) 99901-2345', 'suporte@higieneviva.com', 'Rua dos Guaranás, 1941 - São Paulo/SP', '820.734.968-11'),
 ('Eletrônica e Cia', '(11) 99012-3456', 'eletronicaecia@eletronica.com', 'Av. dos Lírios, 2043 - São Paulo/SP', '965.120.473-25'),
 
+
+-- cliente_venda
+INSERT INTO cliente_venda (id_cliente, id_venda) 
+VALUES  (1, 1),
+		(2, 2),
+		(3, 3),
+		(4, 4),
+		(5, 5),
+		(6, 6),
+		(7, 7),
+		(8, 8),
+		(9, 9),
+		(10, 10),
+		(1, 11),
+		(2, 12),
+		(5, 13),
+		(7, 14),
+        (10, 15);
 
 INSERT INTO produto_fornecedor (id_produto, id_categoria, id_fornecedor) 
 VALUES  
@@ -281,3 +346,27 @@ VALUES
 	(8, 3, '2025-04-21', 40.00, 'Pago'),
 	(9, 4, '2025-04-21', 92.70, 'Pago'),
 	(10, 1, '2025-04-22', 33.33, 'Pago');
+
+INSERT INTO pedido (id_cliente, id_pagamento, dt_pedido, valor_total, sts) 
+VALUES  
+    (5, 4, '2025-04-08', 49.50, 'Pago'),
+	(6, 3, '2025-04-09', 112.80, 'Pago'),
+	(7, 2, '2025-04-09', 36.00, 'Cancelado'),
+	(8, 1, '2025-04-10', 27.99, 'Pago'),
+	(9, 3, '2025-04-10', 88.75, 'Pago'),
+	(10, 4, '2025-04-10', 95.10, 'Aberto'),
+	(1, 1, '2025-04-11', 40.50, 'Pago'),
+	(2, 3, '2025-04-11', 67.90, 'Pago'),
+	(3, 4, '2025-04-12', 51.60, 'Cancelado'),
+	(4, 2, '2025-04-12', 24.99, 'Pago'),
+	(5, 1, '2025-04-12', 92.35, 'Pago'),
+	(6, 4, '2025-04-13', 15.00, 'Pago'),
+	(7, 1, '2025-04-13', 43.80, 'Pago'),
+	(8, 2, '2025-04-14', 59.70, 'Aberto'),
+	(9, 4, '2025-04-14', 48.25, 'Pago'),
+	(10, 3, '2025-04-14', 73.00, 'Pago'),
+	(1, 4, '2025-04-15', 39.00, 'Pago'),
+	(2, 2, '2025-04-15', 61.40, 'Pago'),
+	(3, 1, '2025-04-15', 56.60, 'Pago'),
+	(4, 3, '2025-04-16', 68.00, 'Aberto'),
+
