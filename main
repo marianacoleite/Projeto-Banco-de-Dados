@@ -4,453 +4,95 @@ CREATE DATABASE baratao_do_bairro;
 
 USE baratao_do_bairro;
 
-CREATE TABLE pagamento(
-    id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
-    forma_pagar VARCHAR(100) NOT NULL
-);
+CREATE TABLE categorias (
+  id_categoria INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100) NOT NULL
+ );
 
-CREATE TABLE cliente (
-	id_cliente INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    telefone CHAR(14) NOT NULL ,
-	email VARCHAR(100)  NOT NULL,
-	endereco VARCHAR(100)  NOT NULL,
-    cpf CHAR(14) NOT NULL UNIQUE KEY,
-    sts ENUM('A','I') NOT NULL,
-    id_pagamento INT NOT NULL,
-    FOREIGN KEY (id_pagamento) REFERENCES pagamento(id_pagamento)
-);
-
-CREATE TABLE pedido (
-    id_pedido INT PRIMARY KEY AUTO_INCREMENT,
-	dt_pedido DATE NOT NULL,
-	valor_total DECIMAL(10,2) NOT NULL,
-    sts ENUM('Aberto', 'Pago', 'Cancelado') NOT NULL,
-    id_cliente INT NOT NULL,
-	id_pagamento INT NOT NULL,
-	FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
-	FOREIGN KEY (id_pagamento) REFERENCES pagamento(id_pagamento)
-);
-
-CREATE TABLE categoria (
-	id_categoria INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(100) NOT NULL
-);
+CREATE TABLE produtos (
+  id_produto INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100) NOT NULL,
+  quantidade INT NOT NULL,
+  preco DECIMAL(10,2) NOT NULL,
+  id_categoria INT NOT NULL,
+  FOREIGN KEY (id_categoria) REFERENCES categorias (id_categoria)
+ );
 
 
-CREATE TABLE funcionario (
-	id_funcionario INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    telefone CHAR(14) NOT NULL ,
-	email VARCHAR(100)  NOT NULL,
-	endereco VARCHAR(100)  NOT NULL,
-    cpf CHAR(14) NOT NULL UNIQUE KEY
-);    
+INSERT INTO fornecedores (nome, telefone, contato, endereco) VALUES
+('Distribuidora ABC', '(11) 91234-5678', 'contato@abc.com', 'Rua das Indústrias, 123, São Paulo, SP'),
+('Comercial XYZ', '(21) 99876-5432', 'atendimento@xyz.com', 'Avenida Principal, 456, Rio de Janeiro, RJ'),
+('Supermercado PQR', '(85) 92345-6789', 'suporte@pqr.com', 'Rua do Comércio, 789, Fortaleza, CE'),
+('Fábrica de Laticínios LMN', '(31) 98765-4321', 'vendas@lmn.com', 'Rodovia Estadual, 234, Belo Horizonte, MG'),
+('Vendas e Distribuições JKL', '(41) 93456-7890', 'contato@jkl.com', 'Rua do Porto, 987, Curitiba, PR');
 
-CREATE TABLE venda (
-    id_venda INT PRIMARY KEY AUTO_INCREMENT,
-    dt_venda DATE NOT NULL,
-    valor_total DECIMAL(10,2) NOT NULL,
-    id_funcionario INT NOT NULL,
-    id_cliente INT NOT NULL,
-    id_pagamento INT NOT NULL,
-    FOREIGN KEY (id_funcionario) REFERENCES funcionario(id_funcionario),
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
-	FOREIGN KEY (id_pagamento) REFERENCES pagamento(id_pagamento)
-);
-
-CREATE TABLE produto (
-	id_produto INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    quantidade INT NOT NULL,
-    preco DECIMAL(10,2) NOT NULL,
-	id_categoria INT NOT NULL,
-	id_venda INT NOT NULL,
-	id_funcionario INT NOT NULL,
-    FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria),
-    FOREIGN KEY (id_venda) REFERENCES venda(id_venda),
-    FOREIGN KEY (id_funcionario) REFERENCES funcionario(id_funcionario)
-);  
-CREATE TABLE fornecedor (
-	id_fornecedor INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(100) NOT NULL,
-    telefone CHAR(14) NOT NULL ,
-    email VARCHAR(100)  NOT NULL,
-    endereco VARCHAR(100)  NOT NULL,
-	cpf CHAR(14) NOT NULL UNIQUE KEY
-);    
-    
-CREATE TABLE cliente_venda (
-    id_cliente INT NOT NULL,
-    id_venda INT NOT NULL,
-	FOREIGN KEY (id_cliente ) REFERENCES cliente(id_cliente),
-    FOREIGN KEY (id_venda) REFERENCES venda(id_venda)
-);   
-
-CREATE TABLE produto_fornecedor(
-    id_produto INT NOT NULL,
-    id_categoria INT NOT NULL,
-    id_fornecedor INT NOT NULL,
-    FOREIGN KEY (id_produto) REFERENCES produto(id_produto)
-    FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
-    FOREIGN KEY (id_fornecedor) REFERENCES fornecedor(id_fornecedor)
-);
-
--- INSERTS DO CODIGO 
--- Pagamento
-INSERT INTO pagamento (forma_pagar) 
-VALUES  ('Dinheiro'),
-		('Pix'),
-		('Cartão de Crédito'),
-		('Cartão de Débito');
-
-INSERT INTO cliente (nome, telefone, email, endereco, cpf, sts, id_pagamento)
- VALUES
-		('Ana Paula Silva', '(75)91234-5678', 'ana.silva@email.com', 'Rua das Flores, 123', '123.456.789-00', 'A', 1),
-		('Carlos Alberto Souza', '(75)99876-5432', 'carlos.souza@email.com', 'Av. Atlântica, 456', '234.567.890-11', 'I', 2),
-		('Mariana Lima', '(75)92345-6789', 'mariana.lima@email.com', 'Rua Minas Gerais, 789', '345.678.901-22', 'A', 1),
-		('João Pedro Oliveira', '(75)93456-7890', 'joao.oliveira@email.com', 'Rua Curitiba, 101', '456.789.012-33', 'A', 3),
-		('Fernanda Costa', '(75)94567-8901', 'fernanda.costa@email.com', 'Av. Ipiranga, 202', '567.890.123-44', 'I', 2),
-		('Lucas Mendes', '(61)95678-9012', 'lucas.mendes@email.com', 'SQN 210 Bloco D', '678.901.234-55', 'A', 4),
-		('Juliana Rocha', '(71)96789-0123', 'juliana.rocha@email.com', 'Rua Bahia, 303', '789.012.345-66', 'A', 3),
-		('Fatima Martins', '(81)97890-1234', 'fatima.martins@email.com', 'Av. Recife, 404', '890.123.456-77', 'I', 2),
-		('Tatiane Borges', '(91)98901-2345', 'tatiane.borges@email.com', 'Trav. Nazaré, 505', '901.234.567-88', 'A', 1),
-		('Eduardo Ferreira', '(85)99012-3456', 'eduardo.ferreira@email.com', 'Rua Fortaleza, 606', '012.345.678-99', 'I', 4);
-
-INSERT INTO categoria (nome) 
-VALUES  ('Alimentos'),
-		('Bebidas'),
-		('Limpeza'),
-		('Higiene'),
-		('Eletrônicos');
+INSERT INTO clientes (nome, telefone, email, endereco, cpf, sts) VALUES
+('Ana Paula', '(75)91234-5678', 'ana.paula@gmail.com', 'Rua A, 123', '123.456.789-00', 'Ativo'),
+('Carlos Henrique', '(75)99876-5432', 'carlos.h@gmail.com', 'Rua B, 456', '987.654.321-00', 'Inativo'),
+('Mariana Souza', '(75)98765-4321', 'mariana.s@gmail.com', 'Rua C, 789', '456.789.123-11', 'Ativo'),
+('Ricardo Lopes', '(75)99111-2233', 'ricardo.l@gmail.com', 'Rua Z, 999', '999.888.777-66', 'Ativo'),
+('Juliana Castro', '(75)98321-4567', 'juliana.castro@gmail.com', 'Rua D, 101', '234.567.890-11', 'Inativo');
 
 
--- Funcionario
-INSERT INTO funcionario (nome, telefone, email, endereco, cpf) 
-VALUES
-		('Rafael Andrade', '(75)91234-5678', 'rafael.d.98@gmail.com', 'Av. Paulista, 1000', '381.452.967-25'),
-		('Bianca Torres', '(75)99876-5432', 'bianca.torres43@gmail.com', 'Rua do Carmo, 250', '147.903.285-66'),
-		('Thiago Mendes', '(75)92345-6789', 'thiago.mendes23@gmail.com', 'Rua Java, 45', '596.281.470-09'),
-		('Larissa Gomes', '(75)93456-7890', 'larissa.gomes87@gmail.com', 'Av. das Artes, 789', '860.134.902-33'),
-		('Fernando Lima', '(75)94567-8901', 'fernando.lima97@gmail.com', 'Rua da Ajuda, 303', '203.875.619-70'),
-		('Patrícia Souza','(75)95678-9012', 'patricia.souza7@gmail.com', 'SQN 108 Bloco B', '472.063.198-44');
+INSERT INTO funcionarios (nome, telefone, email, cargo, salario, cpf, sts, endereco) VALUES
+('João Silva', '(75)91234-5678', 'joao.silva@empresa.com', 'Vendedor', 2500.00, '123.456.789-00', 'Ativo', 'Rua A, 123'),
+('Luciana Rocha', '(75)91235-5679', 'luciana.rocha@empresa.com', 'Gerente', 5000.00, '987.654.321-00', 'Ativo', 'Avenida B, 456'),
+('Paulo Mendes', '(75)91236-5680', 'paulo.mendes@empresa.com', 'Auxiliar', 1800.00, '456.789.123-11', 'Inativo', 'Praça C, 789'),
+('Aline Costa', '(75)91237-5681', 'aline.costa@empresa.com', 'Vendedor', 2400.00, '999.888.777-66', 'Ativo', 'Rua D, 101'),
+('Rafael Souza', '(75)91238-5682', 'rafael.souza@empresa.com', 'Supervisor', 3200.00, '234.567.890-11', 'Ativo', 'Avenida E, 202');
 
--- Funcionario
-INSERT INTO funcionario (nome, telefone, email, endereco, cpf) 
-VALUES
-		('Gustavo Rocha', '(75)96789-0123', 'gustavo7x@gmail.com', 'Rua Salvador, 333', '915.720.384-17'),
-		('Camila Ferreira', '(75)97890-1234', 'camila.89@gmail.com', 'Av. Recife, 404', '658.294.730-81'),
-        ('Vanessa Ribeiro', '(75)98912-3456', 'vanessa.ribeiro@gmail.com', 'Rua das Laranjeiras, 505', '724.198.365-92'),
-		('Bruno Costa', '(75)99134-5678', 'bruno.costa@gmail.com', 'Av. Brasil, 789', '837.610.429-50'),
-		('Juliana Martins', '(75)99245-6789', 'juliana.martins@gmail.com', 'Rua das Violetas, 234', '168.907.531-28'),
-		('Carlos Henrique', '(75)99356-7890', 'carlos.henrique@gmail.com', 'Travessa Sol Nascente, 112', '590.243.817-64');
+DELIMITER $$
 
--- Venda
-INSERT INTO venda (id_funcionario, id_cliente, dt_venda, valor_total)
-VALUES  (4, 8, '2025-02-07', 723.00),
-		(4, 2, '2025-03-22', 150.00),
-		(6, 3, '2025-03-18', 275.00),
-		(2, 5, '2025-01-12', 150.50),
-		(3, 30, '2025-04-21', 410.00),
-		(5, 5, '2025-03-27', 310.40),
-		(1, 18, '2025-04-09', 155.00),
-		(3, 3, '2025-01-20', 300.00),
-		(2, 26, '2025-03-17', 460.00),
-		(6, 21, '2025-04-12', 487.60);
--- Venda 
-INSERT INTO venda (id_funcionario, id_cliente, dt_venda, valor_total)
-VALUES 
-		(5, 20, '2025-04-11', 295.00),
-		(2, 22, '2025-04-13', 168.90),
-		(4, 24, '2025-04-15', 420.00),
-		(8, 15, '2025-04-06', 235.90),
-		(3, 22, '2025-03-06', 205.50),
-		(2, 14, '2025-04-05', 680.00),
-		(3, 13, '2025-01-23', 395.20),
-		(7, 1, '2025-04-01', 430.00),
-		(3, 10, '2025-03-08', 199.99),
-		(1, 26, '2025-04-17', 230.00);
-
--- Venda
-INSERT INTO venda (id_funcionario, id_cliente, dt_venda, valor_total)
-VALUES
-
-		(6, 1, '2025-02-05', 180.00),
-		(1, 23, '2025-03-09', 580.90),
-		(7, 27, '2025-03-20', 205.00),
-		(8, 23, '2025-04-14', 350.00),
-		(2, 20, '2025-02-28', 685.75),
-		(3, 16, '2025-02-06', 340.40),
-		(5, 29, '2025-04-20', 330.40),
-		(6, 19, '2025-02-24', 310.10),
-		(4, 25, '2025-03-14', 120.45),
-		(7, 17, '2025-04-08', 505.00),
-		(8, 12, '2025-04-03', 175.00),
-		(7, 20, '2025-04-11', 620.90),
-		(5, 24, '2025-03-11', 330.00),
-		(8, 1, '2025-04-22', 270.00),
-		(3, 11, '2025-04-02', 300.00),
-		(7, 28, '2025-04-19', 120.00),
-		(3, 30, '2025-03-29', 299.99),
-		(1, 14, '2025-04-05', 685.10);
-
--- ATUALIZAR DEPOIS O ID FUNCIONARIO
-INSERT INTO produto (nome, quantidade, preco, id_categoria, id_venda, id_funcionario) 
-VALUES
--- Limpeza
-		('Sabão em Pó 800g', 1, 8.90, 3, 11, 5),
-		('Desinfetante Citrus 1L', 1, 4.20, 3, 12, 6),
-		('Água Sanitária 1L', 1, 3.50, 3, 13, 7),
-		('Esponja Multiuso c/3', 1, 2.99, 3, 14, 8),
-		('Pano de Prato', 1, 5.90, 3, 15, 1),
-		('Limpa Vidros 500ml', 1, 6.99, 3, 1, 2),
-		('Saco de Lixo 60L c/10', 1, 9.50, 3, 2, 3),
-		('Detergente Neutro 500ml', 1, 2.20, 3, 3, 4),
-		('Escova para Vaso Sanitário', 1, 5.99, 3, 4, 5),
-		('Desentupidor Manual', 1, 7.90, 3, 5, 6);
-
--- ATUALIZAR DEPOIS O ID FUNCIONARIO
-INSERT INTO produto (nome, quantidade, preco, id_categoria, id_venda, id_funcionario) 
-VALUES
--- Higiente 
-		('Shampoo Infantil 250ml', 1, 9.50, 4, 6, 7),
-		('Condicionador 300ml', 1, 10.90, 4, 7, 8),
-		('Sabonete Neutro', 2, 1.80, 4, 8, 1),
-		('Papel Higiênico Folha Dupla c/4', 1, 7.99, 4, 9, 2),
-		('Creme Dental com Flúor 90g', 1, 3.30, 4, 10, 3),
-		('Desodorante Roll-on', 1, 6.99, 4, 11, 4),
-		('Fio Dental 25m', 1, 3.99, 4, 12, 5),
-		('Absorvente Noturno c/8', 1, 5.80, 4, 13, 6),
-		('Lenço Umedecido c/50', 1, 7.50, 4, 14, 7),
-		('Escova de Cabelo Pequena', 1, 4.90, 4, 15, 8);
-
-    -- Bebida
-    INSERT INTO produto (nome, quantidade, preco, id_categoria, id_venda, id_funcionario) 
-    VALUES
-		('Refrigerante Guaraná 2L', 1, 8.99, 2, 1, 3),
-		('Cerveja Skol 350ml', 2, 2.99, 2, 2, 4),
-		('Suco de Uva Integral 1L', 1, 12.50, 2, 3, 5),
-		('Água com Gás 500ml', 2, 2.20, 2, 4, 6),
-		('Iogurte Morango 170g', 2, 2.60, 2, 5, 7),
-		('Energético Monster 473ml', 1, 9.99, 2, 6, 8),
-		('Chá Gelado Pêssego 1L', 1, 4.80, 2, 7, 1),
-		('Achocolatado Pronto 200ml', 2, 2.99, 2, 8, 2),
-		('Café Gelado 270ml', 1, 5.49, 2, 9, 3),
-		('Suco Detox Verde 300ml', 1, 6.90, 2, 10, 4);
-
--- Fornecedor
-INSERT INTO fornecedor (nome, telefone, email, endereco, cpf) 
-VALUES
-	('Alimentos São João', '(11) 98123-4567', 'contato@alimentosjoao.com', 'Rua das Flores, 101 - São Paulo/SP', '397.284.150-20'),
-	('Bebidas São Paulo', '(11) 98234-5678', 'vendas@bebidasaopaulo.com', 'Avenida Central, 205 - São Paulo/SP', '620.481.903-78'),
-	('Limpeza e Cia', '(11) 98345-6789', 'limpezaecia@limpeza.com', 'Rua do Pinho, 307 - São Paulo/SP', '284.910.675-43'),
-	('Higiene Total', '(11) 98456-7890', 'suporte@higienetotal.com', 'Rua dos Limoeiros, 411 - São Paulo/SP', '805.173.469-92'),
-	('TecnoBairro Eletrônicos', '(11) 98567-8901', 'atendimento@tecnobairro.com', 'Rua do Sol, 513 - São Paulo/SP', '943.278.301-66');
-
--- Fornecedor
-INSERT INTO fornecedor (nome, telefone, email, endereco, cpf) 
-VALUES
-	('Super Alimentos Santos', '(11) 99123-4567', 'santos@superalimentos.com', 'Rua das Andorinhas, 1125 - São Paulo/SP', '294.781.652-48'),
-	('Bebidas Real', '(11) 99234-5678', 'contato@bebidasreal.com', 'Av. das Águas, 1227 - São Paulo/SP', '809.356.419-02'),
-	('Limpeza Prática', '(11) 99345-6789', 'limpezapratica@limpeza.com', 'Rua do Luar, 1329 - São Paulo/SP', '504.682.190-75'),
-	('Higiene Pura', '(11) 99456-7890', 'higienepura@higienepura.com', 'Avenida Brasil, 1431 - São Paulo/SP', '148.360.829-64'),
-	('Tech Eletrônicos', '(11) 99567-8901', 'atendimento@techeletronicos.com', 'Rua das Estrelas, 1533 - São Paulo/SP', '230.547.986-33');
-
-
--- Fornecedor
-INSERT INTO fornecedor (nome, telefone, email, endereco, cpf) 
-VALUES
-	('Alimentos Fazenda Boa Vista', '(11) 99678-9012', 'contato@fazendaboavista.com', 'Rua dos Jatobás, 1635 - São Paulo/SP', '781.042.357-94'),
-	('Bebidas do Sertão', '(11) 99789-0123', 'vendas@bebidasdosertao.com', 'Rua da Lua, 1737 - São Paulo/SP', '615.397.804-82'),
-	('Limpeza Express', '(11) 99890-1234', 'limpezaexpress@limpeza.com', 'Avenida do Sol, 1839 - São Paulo/SP', '439.618.205-37'),
-	('Higiene Viva', '(11) 99901-2345', 'suporte@higieneviva.com', 'Rua dos Guaranás, 1941 - São Paulo/SP', '820.734.968-11'),
-	('Eletrônica e Cia', '(11) 99012-3456', 'eletronicaecia@eletronica.com', 'Av. dos Lírios, 2043 - São Paulo/SP', '965.120.473-25');
-
-
--- cliente_venda
-INSERT INTO cliente_venda (id_cliente, id_venda) 
-VALUES  (1, 1),
-		(2, 2),
-		(3, 3),
-		(4, 4),
-		(5, 5),
-		(6, 6),
-		(7, 7),
-		(8, 8),
-		(9, 9),
-		(10, 10),
-		(1, 11),
-		(2, 12),
-		(5, 13),
-		(7, 14),
-        (10, 15);
-
--- cliente_venda
-INSERT INTO cliente_venda (id_cliente, id_venda) 
-VALUES 
-		(16, 1, 5),
-		(17, 2, 8),
-		(18, 3, 13),
-		(19, 4, 6),
-		(20, 5, 21),
-		(21, 1, 15),
-		(22, 2, 4),
-		(23, 3, 14),
-		(24, 4, 7),
-		(25, 5, 20),
-		(26, 1, 9),
-		(27, 2, 3),
-		(28, 3, 16),
-		(29, 4, 18),
-		(30, 5, 22);
-
--- cliente_venda
-INSERT INTO produto_fornecedor (id_produto, id_categoria, id_fornecedor) 
-VALUES  
-		(31, 1, 6),
-		(32, 2, 17),
-		(33, 3, 1),
-		(34, 4, 11),
-		(35, 5, 19),
-		(36, 1, 10),
-		(37, 2, 2),
-		(38, 3, 12),
-		(39, 4, 16),
-		(40, 5, 5),
-		(41, 1, 7),
-		(42, 2, 18),
-		(43, 3, 23),
-		(44, 4, 22),
-		(45, 5, 14),
-		(46, 1, 17),
-		(47, 2, 20),
-		(48, 3, 19),
-		(49, 4, 13),
-	    (50, 5, 15);
-
--- pedido
-INSERT INTO pedido (id_cliente, id_pagamento, dt_pedido, valor_total, sts) 
-VALUES
-	(1, 2, '2025-04-01', 58.90, 'Pago'),
-	(2, 1, '2025-04-02', 34.50, 'Pago'),
-	(3, 3, '2025-04-02', 102.75, 'Pago'),
-	(4, 4, '2025-04-03', 87.30, 'Aberto'),
-	(5, 2, '2025-04-04', 45.60, 'Pago'),
-	(6, 1, '2025-04-04', 19.90, 'Pago'),
-	(7, 4, '2025-04-05', 65.00, 'Pago'),
-	(8, 3, '2025-04-05', 42.25, 'Aberto'),
-	(9, 2, '2025-04-06', 77.40, 'Pago'),
-	(10, 1, '2025-04-06', 33.20, 'Pago'),
-	(1, 3, '2025-04-07', 59.99, 'Cancelado'),
-	(2, 4, '2025-04-07', 84.00, 'Pago'),
-	(3, 2, '2025-04-08', 71.35, 'Pago'),
-	(4, 1, '2025-04-08', 38.10, 'Aberto');
-
-
--- pedido
-INSERT INTO pedido (id_cliente, id_pagamento, dt_pedido, valor_total, sts) 
-VALUES  
-    (5, 3, '2025-04-16', 33.30, 'Pago'),
-	(6, 2, '2025-04-16', 19.99, 'Pago'),
-	(7, 3, '2025-04-17', 104.50, 'Pago'),
-	(8, 4, '2025-04-17', 22.25, 'Pago'),
-	(9, 1, '2025-04-17', 60.00, 'Cancelado'),
-	(10, 2, '2025-04-18', 44.90, 'Pago'),
-	(1, 2, '2025-04-18', 78.80, 'Pago'),
-	(2, 1, '2025-04-18', 35.25, 'Pago'),
-	(3, 3, '2025-04-19', 50.00, 'Aberto'),
-	(4, 4, '2025-04-19', 29.99, 'Pago'),
-	(5, 2, '2025-04-20', 89.90, 'Pago'),
-	(6, 1, '2025-04-20', 21.45, 'Pago'),
-	(7, 2, '2025-04-21', 60.60, 'Cancelado'),
-	(8, 3, '2025-04-21', 40.00, 'Pago'),
-	(9, 4, '2025-04-21', 92.70, 'Pago'),
-	(10, 1, '2025-04-22', 33.33, 'Pago');
-
-INSERT INTO pedido (id_cliente, id_pagamento, dt_pedido, valor_total, sts) 
-VALUES  
-    (5, 4, '2025-04-08', 49.50, 'Pago'),
-	(6, 3, '2025-04-09', 112.80, 'Pago'),
-	(7, 2, '2025-04-09', 36.00, 'Cancelado'),
-	(8, 1, '2025-04-10', 27.99, 'Pago'),
-	(9, 3, '2025-04-10', 88.75, 'Pago'),
-	(10, 4, '2025-04-10', 95.10, 'Aberto'),
-	(1, 1, '2025-04-11', 40.50, 'Pago'),
-	(2, 3, '2025-04-11', 67.90, 'Pago'),
-	(3, 4, '2025-04-12', 51.60, 'Cancelado'),
-	(4, 2, '2025-04-12', 24.99, 'Pago'),
-	(5, 1, '2025-04-12', 92.35, 'Pago'),
-	(6, 4, '2025-04-13', 15.00, 'Pago'),
-	(7, 1, '2025-04-13', 43.80, 'Pago'),
-	(8, 2, '2025-04-14', 59.70, 'Aberto'),
-	(9, 4, '2025-04-14', 48.25, 'Pago'),
-	(10, 3, '2025-04-14', 73.00, 'Pago'),
-	(1, 4, '2025-04-15', 39.00, 'Pago'),
-	(2, 2, '2025-04-15', 61.40, 'Pago'),
-	(3, 1, '2025-04-15', 56.60, 'Pago'),
-	(4, 3, '2025-04-16', 68.00, 'Aberto');
-
-
-
--- TRIGGER
--- validar cargo em atualização
-DELIMITER //
-
-CREATE TRIGGER trg_validar_cargo
-BEFORE UPDATE ON funcionario
+CREATE TRIGGER insere_estoque_com_quantidade_produto
+AFTER INSERT ON produtos
 FOR EACH ROW
 BEGIN
-	IF NEW.cargo NOT IN ('Caixa','Repositor','Gerente','Estoquista','Supervisor') THEN SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT ='Cargo inválido. Use apenas: Caixa, Repositor, Gerente, Estoquista ou Supervisor.';
-	END IF;
-END;
-//
-
-DELIMITER;
-
--- PROCEDURE
--- atualizar preço de um produto
-DELIMITER //
-
-CREATE PROCEDURE atualizar_preco_produto (
-    IN p_id_produto INT,
-    IN p_novo_preco DECIMAL(10,2)
-)
-BEGIN 
-    UPDATE produto
-    SET preco = p_novo_preco
-    WHERE id_protudo = p_id_produto;
-END;
-//
+  INSERT INTO estoques (quantidade_es, id_produto)
+  VALUES (NEW.quantidade, NEW.id_produto);
+END$$
 
 DELIMITER ;
 
--- aplicar desconto em produto
-DELIMITER //
+—------------------------------------------------------------------------------------------------------------------------
+INSERT INTO categorias (nome) VALUES
+('Alimentos'),
+('Bebidas'),
+('Limpeza'),
+('Higiene Pessoal'),
+('Perfumaria'),
 
-CREATE PROCEDURE aplicar_desconto_produto (
-    IN p_id_produto INT,
-    IN p_percentual DECIMAL(5,2)
-)
-BEGIN
-    UPDATE produtos
-    SET preco = preco - (preco * p_percentual / 100)
-    WHERE id = p_id_produto;
-END;
-//
+—------------------------------------------------------------------------------------------------------------------------
 
-DELIMITER;
 
--- cancelar venda
-DELIMITER //
+-- Alimentos
+INSERT INTO produtos (nome, quantidade, preco, id_categoria) VALUES
+('Arroz 5kg', 120, 18.90, 1),
+('Feijão Carioca 1kg', 150, 7.50, 1),
+('Açúcar 1kg', 180, 4.80, 1),
+('Café Torrado 500g', 100, 9.90, 1),
+('Óleo de Soja 900ml', 110, 5.99, 1);
 
-CREATE PROCEDURE cancelar_venda (
-    IN p_id_venda INT
-)
-BEGIN
-    DELETE FROM itens_venda WHERE id_venda = p_id_venda;
-    DELETE FROM vendas WHERE id = p_id_venda;
-END;
-//
+-- Bebidas
+INSERT INTO produtos (nome, quantidade, preco, id_categoria) VALUES
+('Refrigerante Coca-Cola 2L', 140, 6.50, 2),
+('Suco de Laranja 1L', 100, 5.80, 2),
+('Água Mineral 500ml', 200, 2.00, 2),
+('Cerveja Skol 350ml', 90, 2.50, 2),
+('Vinho Tinto 750ml', 60, 25.00, 2);
 
-DELIMITER;
+—------------------------------------------------------------------------------------------------------------------------
+INSERT INTO itens_pedido (quantidade_item, valor_total, dt_pedido, sts, id_estoque, id_produto) VALUES
+(2, 9.98, '2025-01-12', 'Pago', 1, 1),
+(1, 3.49, '2025-01-25', 'Pago', 1, 2),
+(1, 0.99, '2025-02-05', 'Pago', 1, 3),
+(1, 5.49, '2025-02-17', 'Pago', 2, 4),
+(2, 4.58, '2025-02-22', 'Pago', 2, 5);
+
+INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagamento, id_itens_pedido) VALUES
+('2025-05-01', 150.00, 1, 1, 1, 1),
+('2025-05-02', 45.00, 2, 2, 2, 2),
+('2025-05-03', 200.00, 3, 3, 1, 3),
+('2025-05-04', 85.00, 4, 4, 3, 4),
+('2025-05-05', 320.00, 5, 5, 2, 5);
+
+
