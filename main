@@ -389,3 +389,68 @@ VALUES
 	(2, 2, '2025-04-15', 61.40, 'Pago'),
 	(3, 1, '2025-04-15', 56.60, 'Pago'),
 	(4, 3, '2025-04-16', 68.00, 'Aberto');
+
+
+
+-- TRIGGER
+-- validar cargo em atualização
+DELIMITER //
+
+CREATE TRIGGER trg_validar_cargo
+BEFORE UPDATE ON funcionario
+FOR EACH ROW
+BEGIN
+	IF NEW.cargo NOT IN ('Caixa','Repositor','Gerente','Estoquista','Supervisor') THEN SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT ='Cargo inválido. Use apenas: Caixa, Repositor, Gerente, Estoquista ou Supervisor.';
+	END IF;
+END;
+//
+
+DELIMITER;
+
+-- PROCEDURE
+-- atualizar preço de um produto
+DELIMITER //
+
+CREATE PROCEDURE atualizar_preco_produto (
+    IN p_id_produto INT,
+    IN p_novo_preco DECIMAL(10,2)
+)
+BEGIN 
+    UPDATE produto
+    SET preco = p_novo_preco
+    WHERE id_protudo = p_id_produto;
+END;
+//
+
+DELIMITER ;
+
+-- aplicar desconto em produto
+DELIMITER //
+
+CREATE PROCEDURE aplicar_desconto_produto (
+    IN p_id_produto INT,
+    IN p_percentual DECIMAL(5,2)
+)
+BEGIN
+    UPDATE produtos
+    SET preco = preco - (preco * p_percentual / 100)
+    WHERE id = p_id_produto;
+END;
+//
+
+DELIMITER;
+
+-- cancelar venda
+DELIMITER //
+
+CREATE PROCEDURE cancelar_venda (
+    IN p_id_venda INT
+)
+BEGIN
+    DELETE FROM itens_venda WHERE id_venda = p_id_venda;
+    DELETE FROM vendas WHERE id = p_id_venda;
+END;
+//
+
+DELIMITER;
