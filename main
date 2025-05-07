@@ -130,6 +130,13 @@ INSERT INTO fornecedores (nome, telefone, contato, endereco) VALUES
 ('Distribuidora de Bebidas BCD', '(63) 98765-4321', 'bebidasbcd@distribuidora.com', 'Rua da Cerveja, 543, Palmas, TO');
 
 INSERT INTO fornecedores (nome, telefone, contato, endereco) VALUES
+('Fábrica de Produtos Congelados', '(71) 91234-6789', 'congelados@fabrica.com', 'Avenida da Frigidaire, 789, Salvador, BA'),
+('Fabrica de Laticínios & Sucos', '(19) 93456-7890', 'laticinios&suco@fabrica.com', 'Rua das Frutas, 456, Campinas, SP'),
+('Vendas Rápidas Ltda', '(73) 96321-6547', 'vendasrapidas@ltda.com', 'Avenida Rápida, 321, Ilhéus, BA'),
+('Comercial GHI', '(62) 93334-7890', 'contato@ghi.com', 'Rua Comercial, 1020, Goiânia, GO'),
+('Importadora de Alimentos VPM', '(47) 96123-4321', 'importadora@vpm.com', 'Avenida Internacional, 321, Joinville, SC');
+
+INSERT INTO fornecedores (nome, telefone, contato, endereco) VALUES
 ('Alimentos do Campo', '(82) 92345-6789', 'campo@alimentos.com', 'Rua do Campo, 876, Maceió, AL'),
 ('Distribuidora de Frutas e Verduras', '(81) 92834-7654', 'frutaseverduras@distribuidora.com', 'Rua Verde, 123, Recife, PE'),
 ('Bebidas & Companhia', '(75) 94785-6321', 'bebidas@companhia.com', 'Avenida das Bebidas, 321, Feira de Santana, BA'),
@@ -155,13 +162,19 @@ INSERT INTO clientes (nome, telefone, email, endereco, cpf, sts) VALUES
 ('Sabrina Dias', '(75)95432-1098', 'sabrina.dias@gmail.com', 'Rua H, 505', '678.901.234-55', 'Ativo'),
 ('Renato Silva', '(75)94321-0987', 'renato.silva@gmail.com', 'Rua I, 606', '789.012.345-66', 'Ativo');
 
-
 INSERT INTO clientes (nome, telefone, email, endereco, cpf, sts) VALUES 
 ('Tatiane Costa', '(75)93210-9876', 'tatiane.costa@gmail.com', 'Rua J, 707', '890.123.456-77', 'Inativo'),
 ('Diego Rocha', '(75)92109-8765', 'diego.rocha@gmail.com', 'Rua K, 808', '901.234.567-88', 'Ativo'),
 ('Camila Azevedo', '(75)91098-7654', 'camila.azev@gmail.com', 'Rua L, 909', '012.345.678-99', 'Ativo'),
 ('Fábio Moura', '(75)90987-6543', 'fabio.moura@gmail.com', 'Rua M, 1001', '123.456.789-01', 'Ativo'),
 ('Patrícia Nunes', '(75)89876-5432', 'patricia.nunes@gmail.com', 'Rua N, 1102', '234.567.890-12', 'Inativo');
+
+INSERT INTO clientes (nome, telefone, email, endereco, cpf, sts) VALUES
+ ('Eduardo Reis', '(75)88765-4321', 'eduardo.reis@gmail.com', 'Rua O, 1203', '345.678.901-23', 'Ativo'),
+('Vanessa Braga', '(75)87654-3210', 'vanessa.braga@gmail.com', 'Rua P, 1304', '456.789.012-34', 'Ativo'),
+('Henrique Alves', '(75)86543-2109', 'henrique.alves@gmail.com', 'Rua Q, 1405', '567.890.123-45', 'Inativo'),
+('Beatriz Cardoso', '(75)85432-1098', 'beatriz.cardoso@gmail.com', 'Rua R, 1506', '678.901.234-56', 'Ativo'),
+('Thiago Ribeiro', '(75)84321-0987', 'thiago.ribeiro@gmail.com', 'Rua S, 1607', '789.012.345-67', 'Ativo');
 
 INSERT INTO clientes (nome, telefone, email, endereco, cpf, sts) VALUES
 ('Natália Ferreira', '(75)83210-9876', 'natalia.ferreira@gmail.com', 'Rua T, 1708', '890.123.456-78', 'Inativo'),
@@ -193,6 +206,13 @@ INSERT INTO funcionarios (nome, telefone, email, cargo, salario, cpf, sts, ender
 ('Rodrigo Almeida', '(75)91246-5690', 'rodrigo.almeida@empresa.com', 'Analista', 3300.00, '345.678.902-88', 'Ativo', 'Avenida M, 1010'),
 ('Beatriz Martins', '(75)91247-5691', 'beatriz.martins@empresa.com', 'Vendedor', 2500.00, '876.543.211-99', 'Inativo', 'Praça N, 1111'),
 ('Vinícius Oliveira', '(75)91248-5692', 'vinicius.oliveira@empresa.com', 'Auxiliar', 2000.00, '234.567.894-00', 'Ativo', 'Rua O, 1212');
+
+INSERT INTO funcionarios (nome, telefone, email, cargo, salario, cpf, sts, endereco) VALUES
+('Tatiane Souza', '(75)91249-5693', 'tatiane.souza@empresa.com', 'Supervisor', 3000.00, '345.678.903-11', 'Ativo', 'Avenida P, 1313'),
+('Cláudio Lima', '(75)91250-5694', 'claudio.lima@empresa.com', 'Vendedor', 2400.00, '123.456.790-22', 'Ativo', 'Rua Q, 1414'),
+('Mariana Rocha', '(75)91251-5695', 'mariana.rocha@empresa.com', 'Gerente', 5100.00, '987.654.322-33', 'Ativo', 'Avenida R, 1515'),
+('Gustavo Costa', '(75)91252-5696', 'gustavo.costa@empresa.com', 'Analista', 3400.00, '234.567.895-44', 'Inativo', 'Praça S, 1616'),
+('Patrícia Almeida', '(75)91253-5697', 'patricia.almeida@empresa.com', 'Vendedor', 2300.00, '345.678.904-55', 'Ativo', 'Rua T, 1717');
 
 INSERT INTO funcionarios (nome, telefone, email, cargo, salario, cpf, sts, endereco) VALUES
 ('Thiago Santos', '(75)91254-5698', 'thiago.santos@empresa.com', 'Supervisor', 3200.00, '876.543.212-66', 'Inativo', 'Avenida U, 1818'),
@@ -237,6 +257,12 @@ INSERT INTO categorias (nome) VALUES
 ('Cereais'),
 ('Temperos'),
 
+INSERT INTO categorias (nome) VALUES
+('Produtos Naturais'),
+('Produtos Diet e Light'),
+('Vestuário'),
+('Eletrônicos'),
+('Bebidas Alcoólicas'),
 
 INSERT INTO categorias (nome) VALUES
 ('Bebidas Não Alcoólicas'),
