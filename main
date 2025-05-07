@@ -38,6 +38,32 @@ CREATE TABLE fornecedores (
   endereco VARCHAR(100) NOT NULL
  );
 
+ CREATE TABLE clientes (
+  id_cliente INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100) NOT NULL,
+  telefone CHAR(14) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  endereco VARCHAR(100) NOT NULL,
+  cpf CHAR(14) NOT NULL,
+  sts ENUM('Ativo', 'Inativo') NOT NULL
+ );
+
+CREATE TABLE pagamentos (
+  id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
+  forma_pagar VARCHAR(45) NOT NULL
+ );
+
+—------------------------------------------------------------------------------------------------------------------------
+-- Pagamento
+INSERT INTO pagamentos (forma_pagar) 
+VALUES  
+	('Dinheiro'),
+	('Pix'),
+	('Cartão de Crédito'),
+	('Cartão de Débito');
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 INSERT INTO fornecedores (nome, telefone, contato, endereco) VALUES
 ('Distribuidora ABC', '(11) 91234-5678', 'contato@abc.com', 'Rua das Indústrias, 123, São Paulo, SP'),
 ('Comercial XYZ', '(21) 99876-5432', 'atendimento@xyz.com', 'Avenida Principal, 456, Rio de Janeiro, RJ'),
@@ -51,6 +77,13 @@ INSERT INTO fornecedores (nome, telefone, contato, endereco) VALUES
 ('Produtos Frescos DEF', '(83) 99823-7654', 'frescos@def.com', 'Rua da Horta, 123, João Pessoa, PB'),
 ('Laticínios e Frios XYZ', '(62) 94567-1234', 'laticinios@xyz.com', 'Rua do Queijo, 456, Goiânia, GO'),
 ('Alimentos Sabor & Cia', '(71) 98765-4321', 'saborcia@alimentos.com', 'Rua do Mercado, 789, Salvador, BA');
+
+INSERT INTO fornecedores (nome, telefone, contato, endereco) VALUES
+('Mercado e Cia', '(61) 99987-6543', 'mercadocia@cia.com', 'Avenida Central, 1001, Brasília, DF'),
+('Produtos Vegetais ABC', '(44) 93234-7654', 'contato@vegetaisabc.com', 'Rua do Verde, 567, Maringá, PR'),
+('Fábrica de Alimentos Delícia', '(15) 92456-7890', 'delicias@fabrica.com', 'Rua do Sabor, 890, Sorocaba, SP'),
+('Indústria de Alimentos XXY', '(16) 93567-8901', 'contato@xxyalimentos.com', 'Avenida das Indústrias, 234, São Carlos, SP'),
+('Distribuidora de Bebidas BCD', '(63) 98765-4321', 'bebidasbcd@distribuidora.com', 'Rua da Cerveja, 543, Palmas, TO');
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -68,6 +101,14 @@ INSERT INTO clientes (nome, telefone, email, endereco, cpf, sts) VALUES
 ('Sabrina Dias', '(75)95432-1098', 'sabrina.dias@gmail.com', 'Rua H, 505', '678.901.234-55', 'Ativo'),
 ('Renato Silva', '(75)94321-0987', 'renato.silva@gmail.com', 'Rua I, 606', '789.012.345-66', 'Ativo');
 
+
+INSERT INTO clientes (nome, telefone, email, endereco, cpf, sts) VALUES 
+('Tatiane Costa', '(75)93210-9876', 'tatiane.costa@gmail.com', 'Rua J, 707', '890.123.456-77', 'Inativo'),
+('Diego Rocha', '(75)92109-8765', 'diego.rocha@gmail.com', 'Rua K, 808', '901.234.567-88', 'Ativo'),
+('Camila Azevedo', '(75)91098-7654', 'camila.azev@gmail.com', 'Rua L, 909', '012.345.678-99', 'Ativo'),
+('Fábio Moura', '(75)90987-6543', 'fabio.moura@gmail.com', 'Rua M, 1001', '123.456.789-01', 'Ativo'),
+('Patrícia Nunes', '(75)89876-5432', 'patricia.nunes@gmail.com', 'Rua N, 1102', '234.567.890-12', 'Inativo');
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO funcionarios (nome, telefone, email, cargo, salario, cpf, sts, endereco) VALUES
@@ -84,7 +125,12 @@ INSERT INTO funcionarios (nome, telefone, email, cargo, salario, cpf, sts, ender
 ('Renata Santos', '(75)91242-5686', 'renata.santos@empresa.com', 'Gerente', 5500.00, '456.789.122-44', 'Ativo', 'Praça I, 606'),
 ('Juliana Silva', '(75)91243-5687', 'juliana.silva@empresa.com', 'Auxiliar', 1900.00, '123.456.788-55', 'Inativo', 'Rua J, 707');
 
-
+INSERT INTO funcionarios (nome, telefone, email, cargo, salario, cpf, sts, endereco) VALUES
+('Eduardo Souza', '(75)91244-5688', 'eduardo.souza@empresa.com', 'Vendedor', 2600.00, '987.654.320-66', 'Ativo', 'Avenida K, 808'),
+('Gabriela Costa', '(75)91245-5689', 'gabriela.costa@empresa.com', 'Gerente', 5400.00, '234.567.893-77', 'Ativo', 'Rua L, 909'),
+('Rodrigo Almeida', '(75)91246-5690', 'rodrigo.almeida@empresa.com', 'Analista', 3300.00, '345.678.902-88', 'Ativo', 'Avenida M, 1010'),
+('Beatriz Martins', '(75)91247-5691', 'beatriz.martins@empresa.com', 'Vendedor', 2500.00, '876.543.211-99', 'Inativo', 'Praça N, 1111'),
+('Vinícius Oliveira', '(75)91248-5692', 'vinicius.oliveira@empresa.com', 'Auxiliar', 2000.00, '234.567.894-00', 'Ativo', 'Rua O, 1212');
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -114,6 +160,13 @@ INSERT INTO categorias (nome) VALUES
 ('Mercearia'),
 ('Doces'),
 ('Laticínios'),
+
+INSERT INTO categorias (nome) VALUES
+('Frutas e Verduras'),
+('Carnes'),
+('Panificados'),
+('Cereais'),
+('Temperos'),
 
 —------------------------------------------------------------------------------------------------------------------------
 
@@ -150,6 +203,21 @@ INSERT INTO produtos (nome, quantidade, preco, id_categoria) VALUES
 ('Desodorante Aerosol 150ml', 130, 8.90, 4),
 ('Papel Higiênico 12 unidades', 180, 12.50, 4);
 
+-- Perfumaria
+INSERT INTO produtos (nome, quantidade, preco, id_categoria) VALUES
+('Perfume Feminino 50ml', 40, 80.00, 5),
+('Perfume Masculino 100ml', 50, 95.00, 5),
+('Colônia 200ml', 70, 45.00, 5),
+('Creme Hidratante 200ml', 90, 30.00, 5),
+('Loção Corporal 300ml', 120, 20.00, 5);
+
+-- Frozen
+INSERT INTO produtos (nome, quantidade, preco, id_categoria) VALUES
+('Pizza Congelada 400g', 100, 15.00, 6),
+('Sopa Congelada 500g', 130, 9.50, 6),
+('Frango Congelado 1kg', 120, 14.99, 6),
+('Lasagna Congelada 700g', 90, 18.00, 6),
+('Hambúrguer Congelado 500g', 80, 12.00, 6);
 
 —------------------------------------------------------------------------------------------------------------------------
 INSERT INTO itens_pedido (quantidade_item, valor_total, dt_pedido, sts, id_estoque, id_produto) VALUES
@@ -165,6 +233,13 @@ INSERT INTO itens_pedido (quantidade_item, valor_total, dt_pedido, sts, id_estoq
 (1, 2.90, '2025-03-14', 'Aberto', 3, 8),
 (6, 15.00, '2025-03-26', 'Cancelado', 4, 9),
 (2, 48.00, '2025-03-30', 'Pago', 4, 10);
+
+INSERT INTO itens_pedido (quantidade_item, valor_total, dt_pedido, sts, id_estoque, id_produto) VALUES
+(1, 4.99, '2025-04-02', 'Pago', 5, 11),
+(2, 11.00, '2025-04-05', 'Pago', 5, 12),
+(1, 6.75, '2025-04-11', 'Pago', 5, 13),
+(2, 18.00, '2025-04-15', 'Aberto', 6, 14),
+(1, 7.99, '2025-04-20', 'Pago', 6, 15);
 
 —------------------------------------------------------------------------------------------------------------------------
 
@@ -182,3 +257,9 @@ INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagame
 ('2025-05-09', 120.00, 4, 9, 1, 9),
 ('2025-05-10', 175.00, 5, 10, 3, 10);
 
+INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagamento, id_itens_pedido) VALUES
+('2025-05-11', 250.00, 1, 11, 2, 11),
+('2025-05-12', 180.00, 2, 12, 1, 12),
+('2025-05-13', 230.00, 3, 13, 3, 13),
+('2025-05-14', 135.00, 4, 14, 2, 14),
+('2025-05-15', 210.00, 5, 15, 1, 15);
