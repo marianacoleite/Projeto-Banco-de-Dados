@@ -53,6 +53,26 @@ CREATE TABLE pagamentos (
   forma_pagar VARCHAR(45) NOT NULL
  );
 
+CREATE TABLE estoques (
+  id_estoque INT PRIMARY KEY AUTO_INCREMENT,
+  quantidade_es INT NOT NULL,
+  id_produto INT NOT NULL,
+  FOREIGN KEY (id_produto) REFERENCES produtos (id_produto)
+ );
+
+
+CREATE TABLE itens_pedido (
+  id_itens_pedido INT  PRIMARY KEY AUTO_INCREMENT,
+  quantidade_item INT NOT NULL,
+  valor_total DECIMAL(10,2) NOT NULL,
+  dt_pedido DATE NOT NULL,
+  sts ENUM('Aberto', 'Pago', 'Cancelado') NOT NULL,
+  id_estoque INT NOT NULL,
+  id_produto INT NOT NULL,
+  FOREIGN KEY (id_estoque) REFERENCES estoques (id_estoque),
+  FOREIGN KEY (id_produto ) REFERENCES produtos (id_produto )
+  );
+
 —------------------------------------------------------------------------------------------------------------------------
 -- Pagamento
 INSERT INTO pagamentos (forma_pagar) 
@@ -216,8 +236,24 @@ INSERT INTO produtos (nome, quantidade, preco, id_categoria) VALUES
 ('Pizza Congelada 400g', 100, 15.00, 6),
 ('Sopa Congelada 500g', 130, 9.50, 6),
 ('Frango Congelado 1kg', 120, 14.99, 6),
-('Lasagna Congelada 700g', 90, 18.00, 6),
+('Lasanha Congelada 700g', 90, 18.00, 6),
 ('Hambúrguer Congelado 500g', 80, 12.00, 6);
+
+-- Congelados
+INSERT INTO produtos (nome, quantidade, preco, id_categoria) VALUES
+('Peixe Congelado 500g', 150, 20.00, 7),
+('Carne Congelada 1kg', 90, 25.00, 7),
+('Frutas Congeladas 1kg', 120, 13.00, 7),
+('Legumes Congelados 500g', 110, 8.00, 7),
+('Pão de Queijo Congelado 300g', 150, 9.50, 7);
+
+-- Mercearia
+INSERT INTO produtos (nome, quantidade, preco, id_categoria) VALUES
+('Molho de Tomate 340g', 160, 2.80, 8),
+('Azeite de Oliva 500ml', 130, 18.00, 8),
+('Vinagre de Maçã 500ml', 100, 4.50, 8),
+('Sal 1kg', 180, 2.50, 8),
+('Alho Desidratado 100g', 90, 5.20, 8);
 
 —------------------------------------------------------------------------------------------------------------------------
 INSERT INTO itens_pedido (quantidade_item, valor_total, dt_pedido, sts, id_estoque, id_produto) VALUES
@@ -241,6 +277,13 @@ INSERT INTO itens_pedido (quantidade_item, valor_total, dt_pedido, sts, id_estoq
 (2, 18.00, '2025-04-15', 'Aberto', 6, 14),
 (1, 7.99, '2025-04-20', 'Pago', 6, 15);
 
+INSERT INTO itens_pedido (quantidade_item, valor_total, dt_pedido, sts, id_estoque, id_produto) VALUES
+(2, 30.00, '2025-04-25', 'Pago', 7, 16),
+(3, 45.00, '2025-05-01', 'Pago', 7, 17),
+(1, 6.20, '2025-05-03', 'Pago', 8, 18),
+(5, 12.50, '2025-05-06', 'Pago', 8, 19),
+(2, 150.00, '2025-05-09', 'Pago', 9, 20);
+
 —------------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagamento, id_itens_pedido) VALUES
@@ -263,3 +306,10 @@ INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagame
 ('2025-05-13', 230.00, 3, 13, 3, 13),
 ('2025-05-14', 135.00, 4, 14, 2, 14),
 ('2025-05-15', 210.00, 5, 15, 1, 15);
+
+INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagamento, id_itens_pedido) VALUES
+('2025-05-16', 500.00, 1, 16, 3, 16),
+('2025-05-17', 140.00, 2, 17, 2, 17),
+('2025-05-18', 300.00, 3, 18, 1, 18),
+('2025-05-19', 80.00, 4, 19, 3, 19),
+('2025-05-20', 160.00, 5, 20, 2, 20);
