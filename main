@@ -446,7 +446,7 @@ INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagame
 —------------------------------------------------------------------------------------------------------------------------
 --Procedures
 
-DELIMITER$$
+DELIMITER $$
 
 CREATE PROCEDURE cadastro_produto(
   nome VARCHAR(100),
@@ -458,27 +458,27 @@ BEGIN
 INSERT INTO produtos(nome,preco,quantidade_estoque,id_categoria)
 VALUES (nome,preco,quantidade,id_categoria);
 
-END$$
-DELIMITER;
+END $$
+DELIMITER ;
 
 ........................................................................................................................
 
 
-DELIMITER$$
+DELIMITER $$
 
-CREATE PROCEDURE atualizar_preco(
+CREATE PROCEDURE atualizar_preco_produto(
   id_produto INT,
   novo_preco DECIMAL(10,2)
 )
 
-END$$
-DELIMITER;
+END $$
+DELIMITER ;
 
 
 —------------------------------------------------------------------------------------------------------------------------
 --Funções
 
-DELIMITER$$
+DELIMITER $$
 
 CREATE FUNCTION estoque_atual(id_produto INT)
 RETURNS INT 
@@ -492,12 +492,12 @@ BEGIN
 
    RETURN qtd;
 
-END$$
-DELIMITER;
+END $$
+DELIMITER ;
 
 .......................................................................................................................
 
-DELIMITER$$
+DELIMITER $$
 
 CREATE FUNCTION cliente_ativo(id_cliente INT)
 RETURNS BOOLEAN
@@ -511,8 +511,8 @@ BEGIN
 
   RETURN situacao_cliente 'Ativo';
 
-END$$
-DELIMITER;
+END $$
+DELIMITER ;
 
 .......................................................................................................................
 
@@ -523,7 +523,7 @@ RETURNS VARCHAR(100)
 
 BEGIN
 
-  DECLARE nome VARCHAR(100)
+  DECLARE nome VARCHAR(100);
   SELECT nome INTO nome 
   FROM funcionario 
   WHERE id_funcionario = id_funcionario;
@@ -535,6 +535,8 @@ DELIMITER;
 
 —------------------------------------------------------------------------------------------------------------------------
 --Triggers 
+
+ALTER TABLE clientes ADD COLUMN data_modificada DATETIME;
 
 DELIMITER$$
 
@@ -560,7 +562,7 @@ BEGIN
   DECLARE total INT;
   SELECT COUNT(*) INTO total 
   FROM itens_venda 
-  WHERE id_produto = OLD.id;
+  WHERE id_produto = OLD.id_produto;
 
   IF total > 0 THEN;
 
@@ -589,16 +591,21 @@ SELECT * FROM produtos WHERE quantidade_estoque < 5;
 ...........................................................................................................................
 
 CREATE VIEW detalhe_venda AS
-SELECT v.id AS id_vendas, c.nome, p.nome AS produtos, itv.quantidade, p.preco
+SELECT v.id_venda, 
+c.nome AS  cliente,
+p.nome AS produtos,
+itp.quantidade_item, 
+p.preco
 FROM vendas v
-JOIN clientes c ON v.id_cliente = c.id
-JOIN itens_venda itv ON v.id = itv.id_venda
-JOIN produtos p ON itv.id_produto = p.id;
+JOIN clientes c ON v.id_cliente = c.id_cliente
+JOIN itens_pedido itp ON v.id_itens_pedido = itp.id_itens_pedido
+JOIN produtos p ON itp.id_produto = p.id_produto;
 
 ...........................................................................................................................
 
-CREATE VIEW produtos_fornecedores AS
-SELECT f.nome AS fornecedor, p.nome AS produto
-FROM produtos p
-JOIN fornecedores f ON p.id_fornecedor = f.id;
+CREATE VIEW total_vendido_produto AS
+SELECT p.nome, SUM(ip.quantidade_item) AS total_vendido
+FROM itens_pedido ip
+JOIN produtos p ON ip.id_produto = p.id_produto
+GROUP BY p.nome;
 
