@@ -443,4 +443,162 @@ INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagame
 ('2025-05-24', 120.00, 4, 24, 1, 24),
 ('2025-05-25', 275.00, 5, 25, 3, 25);
 
+—------------------------------------------------------------------------------------------------------------------------
+--Procedures
+
+DELIMITER$$
+
+CREATE PROCEDURE cadastro_produto(
+  nome VARCHAR(100),
+  preco DECIMAL(10,2),
+  quantidade INT,
+  id_categoria INT
+)
+BEGIN
+INSERT INTO produtos(nome,preco,quantidade_estoque,id_categoria)
+VALUES (nome,preco,quantidade,id_categoria);
+
+END$$
+DELIMITER;
+
+........................................................................................................................
+
+
+DELIMITER$$
+
+CREATE PROCEDURE atualizar_preco(
+  id_produto INT,
+  novo_preco DECIMAL(10,2)
+)
+
+END$$
+DELIMITER;
+
+
+—------------------------------------------------------------------------------------------------------------------------
+--Funções
+
+DELIMITER$$
+
+CREATE FUNCTION estoque_atual(id_produto INT)
+RETURNS INT 
+
+BEGIN
+   
+   DECLARE qtd INT;
+   SELECT quantidade INTO qtd 
+   FROM produtos 
+   WHERE id_produto = id_produto;
+
+   RETURN qtd;
+
+END$$
+DELIMITER;
+
+.......................................................................................................................
+
+DELIMITER$$
+
+CREATE FUNCTION cliente_ativo(id_cliente INT)
+RETURNS BOOLEAN
+
+BEGIN
+  
+  DECLARE situacao_cliente ENUM('Ativo', 'Inativo');
+  SELECT sts INTO situacao_cliente 
+  FROM cliente 
+  WHERE id_cliente = id_cliente;
+
+  RETURN situacao_cliente 'Ativo';
+
+END$$
+DELIMITER;
+
+.......................................................................................................................
+
+DELIMITER$$
+
+CREATE FUNCTION nome_funcionario(id_funcionario INT)
+RETURNS VARCHAR(100)
+
+BEGIN
+
+  DECLARE nome VARCHAR(100)
+  SELECT nome INTO nome 
+  FROM funcionario 
+  WHERE id_funcionario = id_funcionario;
+
+  RETURN nome;
+  
+END$$
+DELIMITER;
+
+—------------------------------------------------------------------------------------------------------------------------
+--Triggers 
+
+DELIMITER$$
+
+CREATE TRIGGER update_cliente
+BEFORE UPDATE ON clientes
+FOR EACH ROW
+
+BEGIN 
+  SET NEW.data_modificada = NOW();
+
+END$$
+DELIMITER;
+
+...........................................................................................................................
+
+DELIMITER$$
+
+CREATE TRIGGER bloquear_exclusao
+BEFORE DELETE ON Produtos
+FOR EACH ROW
+
+BEGIN 
+  DECLARE total INT;
+  SELECT COUNT(*) INTO total 
+  FROM itens_venda 
+  WHERE id_produto = OLD.id;
+
+  IF total > 0 THEN;
+
+    SIGNAL SQLSTATE '45000' 
+    SET MESSAGE_TEXT = 'Produto vendido, não pode ser excluido';
+
+  END IF;
+
+END$$
+DELIMITER;
+
+—------------------------------------------------------------------------------------------------------------------------
+--Views
+
+CREATE VIEW produto_categorias AS 
+SELECT c.nome ,COUNT(p.id) AS total
+FROM produtos p 
+JOIN categorias c ON p.id_categorias = c.id
+GROUP BY c.nome;
+
+...........................................................................................................................
+
+CREATE VIEW estoque_baixo AS
+SELECT * FROM produtos WHERE quantidade_estoque < 5;
+
+...........................................................................................................................
+
+CREATE VIEW detalhe_venda AS
+SELECT v.id AS id_vendas, c.nome, p.nome AS produtos, itv.quantidade, p.preco
+FROM vendas v
+JOIN clientes c ON v.id_cliente = c.id
+JOIN itens_venda itv ON v.id = itv.id_venda
+JOIN produtos p ON itv.id_produto = p.id;
+
+...........................................................................................................................
+
+CREATE VIEW produtos_fornecedores AS
+SELECT f.nome AS fornecedor, p.nome AS produto
+FROM produtos p
+JOIN fornecedores f ON p.id_fornecedor = f.id;
 
