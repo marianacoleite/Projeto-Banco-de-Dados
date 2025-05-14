@@ -448,6 +448,35 @@ INSERT INTO vendas (dt_venda, valor_total, id_funcionario, id_cliente, id_pagame
 
 DELIMITER $$
 
+CREATE PROCEDURE registrar_venda(
+    IN id_cliente INT,
+    IN data_venda DATE
+)
+BEGIN
+    INSERT INTO vendas (id_cliente, dt_venda) VALUES (id_cliente, data_venda);
+END $$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE atualizar_estoque(
+    IN id_produto INT,
+    IN quantidade INT
+)
+BEGIN
+    UPDATE produtos
+    SET quantidade_estoque = quantidade_estoque - p_quantidade
+    WHERE id = id_produto;
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
 CREATE PROCEDURE cadastro_produto(
   nome VARCHAR(100),
   preco DECIMAL(10,2),
@@ -470,6 +499,49 @@ CREATE PROCEDURE atualizar_preco_produto(
 
 —------------------------------------------------------------------------------------------------------------------------
 --Funções
+
+DELIMITER $$
+
+CREATE FUNCTION calcular_total_venda(id_venda INT)
+RETURNS DECIMAL(10,2)
+BEGIN
+    DECLARE total DECIMAL(10,2);
+    SELECT SUM(iv.quantidade * p.preco)
+    INTO total
+    FROM itens_venda iv
+    JOIN produtos p ON iv.id_produto = p.id
+    WHERE iv.id_venda = id_venda;
+    RETURN total;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE FUNCTION nome_cliente(id_clientes INT)
+RETURNS VARCHAR(100)
+BEGIN
+    DECLARE nome VARCHAR(100);
+    SELECT nome_cliente INTO nome FROM clientes WHERE id_cliente = id_clientes;
+    RETURN nome;
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE FUNCTION produto_disponivel(id_produtos INT)
+RETURNS BOOLEAN
+BEGIN
+    DECLARE qtd INT;
+    SELECT quantidade_estoque INTO qtd FROM produtos WHERE id_produto =id_produtos;
+    RETURN qtd > 0;
+END $$
+
+DELIMITER ;
+
+
 
 DELIMITER $$
 
@@ -529,6 +601,38 @@ DELIMITER;
 —------------------------------------------------------------------------------------------------------------------------
 --Triggers 
 
+-- 1. Reduz estoque após inserir item de venda
+
+DELIMITER $$
+
+CREATE TRIGGER reduzir_estoque
+AFTER INSERT ON itens_pedido
+FOR EACH ROW
+BEGIN
+    CALL atualizar_estoque(NEW.id_produto, NEW.quantidade_item);
+END $$
+
+DELIMITER ;
+
+
+-- 2. Impedir venda com estoque insuficiente
+
+DELIMITER $$
+
+CREATE TRIGGER verifica_estoque
+BEFORE INSERT ON itens_pedido
+FOR EACH ROW
+BEGIN
+    DECLARE estoque_atual INT;
+    SELECT quantidade_estoque INTO estoque_atual FROM produtos WHERE id_produto = NEW.id_produto;
+    IF estoque_atual < NEW.quantidade_item THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Estoque insuficiente';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
 ALTER TABLE clientes ADD COLUMN data_modificada DATETIME;
 
 DELIMITER$$
@@ -569,6 +673,32 @@ DELIMITER;
 
 —------------------------------------------------------------------------------------------------------------------------
 --Views
+
+
+CREATE VIEW produtos_disponiveis AS 
+SELECT * FROM produtos
+WHERE quantidade> 0;
+
+
+CREATE VIEW clientes_frequentes AS 
+SELECT c.id_cliente, c.nome, COUNT(v.id_cliente) AS total_compras
+FROM clientes c
+JOIN vendas v ON c.id_cliente= v.id_cliente
+GROUP BY c.id_cliente
+HAVING total_compras > 5;
+
+
+CREATE VIEW total_vendas_por_dia AS
+SELECT dt_venda, SUM(calcular_total_venda(id_venda)) AS total
+FROM vendas
+GROUP BY dt_venda;
+
+
+CREATE VIEW vendas_valor_alto AS
+SELECT v.*, calcular_total_venda(v.id_venda) AS total
+FROM vendas v
+HAVING total > 500;
+
 
 CREATE VIEW produto_categorias AS 
 SELECT c.nome ,COUNT(p.id_produto) AS total
