@@ -458,7 +458,7 @@ END $$
 
 DELIMITER ;
 
-
+........................................................................................................................
 
 DELIMITER $$
 
@@ -474,6 +474,7 @@ END $$
 
 DELIMITER ;
 
+........................................................................................................................
 
 DELIMITER $$
 
@@ -497,6 +498,35 @@ CREATE PROCEDURE atualizar_preco_produto(
   novo_preco DECIMAL(10,2)
 )
 
+........................................................................................................................
+
+DELIMITER $$
+CREATE PROCEDURE aplicar_desconto_produto (
+    IN id_produtos INT,
+    IN percentual DECIMAL(5,2)
+)
+BEGIN
+    UPDATE produtos
+    SET preco = preco - (preco * percentual / 100)
+    WHERE id_produto = id_produtos;
+END $$
+DELIMITER ;
+
+........................................................................................................................
+
+DELIMITER $$
+CREATE PROCEDURE cancelar_venda (
+    IN id_vendas INT
+)
+BEGIN
+    DELETE FROM itens_pedido 
+    WHERE id_itens_pedido = (SELECT id_itens_pedido FROM vendas WHERE id_venda = id_vendas);
+
+    DELETE FROM vendas 
+    WHERE id_venda = id_vendas;
+END $$
+DELIMITER ;
+
 —------------------------------------------------------------------------------------------------------------------------
 --Funções
 
@@ -516,6 +546,8 @@ END $$
 
 DELIMITER ;
 
+.......................................................................................................................
+
 DELIMITER $$
 
 CREATE FUNCTION nome_cliente(id_clientes INT)
@@ -528,6 +560,7 @@ END $$
 
 DELIMITER ;
 
+.......................................................................................................................
 
 DELIMITER $$
 
@@ -541,7 +574,7 @@ END $$
 
 DELIMITER ;
 
-
+.......................................................................................................................
 
 DELIMITER $$
 
@@ -598,10 +631,56 @@ BEGIN
 END$$
 DELIMITER;
 
+.......................................................................................................................
+
+DELIMITER $$
+
+CREATE FUNCTION total_produtos_categoria(id_cat INT)
+RETURNS INT
+BEGIN
+    DECLARE total INT;
+    SELECT COUNT(*) INTO total 
+    FROM produtos 
+    WHERE id_categoria = id_cat;
+    RETURN total;
+END $$
+DELIMITER ;
+
+.......................................................................................................................
+
+DELIMITER $$
+
+CREATE FUNCTION produto_categoria(id_prod INT, id_cat INT)
+RETURNS BOOLEAN
+BEGIN
+    DECLARE categoria INT;
+    SELECT id_categoria INTO categoria 
+    FROM produtos 
+    WHERE id_produto = id_prod;
+    RETURN categoria = id_cat ;
+END $$
+
+DELIMITER ;
+
+.......................................................................................................................
+
+DELIMITER $$
+
+CREATE FUNCTION valor_item_pedido(id_item INT)
+RETURNS DECIMAL(10,2)
+BEGIN
+    DECLARE total DECIMAL(10,2);
+    SELECT valor_total INTO total 
+    FROM itens_pedido 
+    WHERE id_itens_pedido = id_item;
+    RETURN total;
+END $$
+
+DELIMITER ;
+
+
 —------------------------------------------------------------------------------------------------------------------------
 --Triggers 
-
--- 1. Reduz estoque após inserir item de venda
 
 DELIMITER $$
 
@@ -614,8 +693,7 @@ END $$
 
 DELIMITER ;
 
-
--- 2. Impedir venda com estoque insuficiente
+.......................................................................................................................
 
 DELIMITER $$
 
@@ -632,6 +710,7 @@ END $$
 
 DELIMITER ;
 
+.......................................................................................................................
 
 ALTER TABLE clientes ADD COLUMN data_modificada DATETIME;
 
@@ -671,14 +750,45 @@ BEGIN
 END$$
 DELIMITER;
 
+.......................................................................................................................
+
+DELIMITER $$
+
+CREATE TRIGGER validar_cargo_update
+BEFORE UPDATE ON funcionarios
+FOR EACH ROW
+BEGIN
+    IF NEW.cargo NOT IN ('Caixa', 'Repositor', 'Gerente', 'Estoquista', 'Supervisor') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Cargo inválido. Use apenas: Caixa, Repositor, Gerente, Estoquista ou Supervisor.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+.......................................................................................................................
+
+DELIMITER $$
+
+CREATE TRIGGER repor_estoque
+AFTER DELETE ON itens_pedido
+FOR EACH ROW
+BEGIN
+    UPDATE estoques
+    SET quantidade_es = quantidade_es + OLD.quantidade_item
+    WHERE id_estoque = OLD.id_estoque;
+END $$
+
+DELIMITER ;
+
 —------------------------------------------------------------------------------------------------------------------------
 --Views
-
 
 CREATE VIEW produtos_disponiveis AS 
 SELECT * FROM produtos
 WHERE quantidade> 0;
 
+...........................................................................................................................
 
 CREATE VIEW clientes_frequentes AS 
 SELECT c.id_cliente, c.nome, COUNT(v.id_cliente) AS total_compras
@@ -687,18 +797,21 @@ JOIN vendas v ON c.id_cliente= v.id_cliente
 GROUP BY c.id_cliente
 HAVING total_compras > 5;
 
+...........................................................................................................................
 
 CREATE VIEW total_vendas_por_dia AS
 SELECT dt_venda, SUM(calcular_total_venda(id_venda)) AS total
 FROM vendas
 GROUP BY dt_venda;
 
+...........................................................................................................................
 
 CREATE VIEW vendas_valor_alto AS
 SELECT v.*, calcular_total_venda(v.id_venda) AS total
 FROM vendas v
 HAVING total > 500;
 
+...........................................................................................................................
 
 CREATE VIEW produto_categorias AS 
 SELECT c.nome ,COUNT(p.id_produto) AS total
@@ -732,3 +845,46 @@ FROM itens_pedido ip
 JOIN produtos p ON ip.id_produto = p.id_produto
 GROUP BY p.nome;
 
+...........................................................................................................................
+
+CREATE OR REPLACE VIEW vendas_por_cliente AS
+SELECT 
+    c.nome AS nome_cliente,
+    COUNT(v.id_venda) AS total_vendas
+FROM clientes c
+JOIN vendas v ON c.id_cliente = v.id_cliente
+GROUP BY c.nome;
+
+SELECT * FROM vendas_por_cliente;
+
+
+...........................................................................................................................
+
+CREATE OR REPLACE VIEW pagamentos_registrados AS
+SELECT 
+    v.id_venda,
+    c.nome AS nome_cliente,
+    pg.forma_pagar
+FROM vendas v
+JOIN clientes c ON v.id_cliente = c.id_cliente
+JOIN pagamentos pg ON v.id_pagamento = pg.id_pagamento;
+
+SELECT * FROM pagamentos_registrados;
+
+...........................................................................................................................
+
+CREATE OR REPLACE VIEW funcionarios_ativos AS
+SELECT *
+FROM funcionarios
+WHERE sts = 'Ativo';
+
+SELECT * FROM funcionarios_ativos;
+
+...........................................................................................................................
+
+CREATE OR REPLACE VIEW produtos_acima_media AS
+SELECT *
+FROM produtos
+WHERE preco > (SELECT AVG(preco) FROM produtos);
+
+SELECT * FROM produtos_acima_media;
